@@ -35,11 +35,10 @@ const updateContact = async (req, res) => {
 
   if (!contactToUpdate) {
     throw HttpError(404, "Not found");
-  } else {
-    const updatedContact = Object.assign(contactToUpdate, req.body);
-    const result = await contactsService.updateById(id, updatedContact);
-    res.status(200).json(result);
   }
+  const updatedContact = Object.assign(contactToUpdate, req.body);
+  const result = await contactsService.updateById(id, updatedContact);
+  res.status(200).json(result);
 };
 
 module.exports = {
