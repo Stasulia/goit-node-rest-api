@@ -1,8 +1,15 @@
-const express = require("express");
-const controllers = require("../controllers/contactsControllers.js");
-const validateBody = require("../helpers/validateBody");
-const schemas = require("../schemas/contactsSchemas.js");
+import express from "express";
+import controllers from "../controllers/contactsControllers.js";
+import validateBody from "../helpers/validateBody.js";
+import {
+  createContactSchema,
+  updateContactSchema,
+  updateFavoriteSchema,
+} from "../schemas/contactsSchemas.js";
+
 const contactsRouter = express.Router();
+
+const jsonParser = express.json();
 
 contactsRouter.get("/", controllers.getAllContacts);
 
@@ -12,14 +19,23 @@ contactsRouter.delete("/:id", controllers.deleteContact);
 
 contactsRouter.post(
   "/",
-  validateBody(schemas.createContactSchema),
+  jsonParser,
+  validateBody(createContactSchema),
   controllers.createContact
 );
 
 contactsRouter.put(
   "/:id",
-  validateBody(schemas.updateContactSchema),
+  jsonParser,
+  validateBody(updateContactSchema),
   controllers.updateContact
 );
 
-module.exports = contactsRouter;
+contactsRouter.patch(
+  "/:id/favorite",
+  jsonParser,
+  validateBody(updateFavoriteSchema),
+  controllers.updateFavorite
+);
+
+export default contactsRouter;

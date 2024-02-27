@@ -1,12 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const contactsRouter = require("./routes/contactsRouter");
+import "dotenv/config.js";
+
+import express from "express";
+//const cors = require("cors");
+import contactsRouter from "./routes/contactsRouter.js";
+
+import "./db.js";
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-
+//app.use(cors());
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res, next) => {
@@ -18,4 +20,7 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message });
 });
 
-module.exports = app;
+export default app;
+// app.listen(8080, () => {
+//   console.log("Server is running on port 8080");
+// });
