@@ -3,10 +3,13 @@ import "dotenv/config.js";
 import express from "express";
 import contactsRouter from "./routes/contactsRouter.js";
 
+import authRouter from "./routes/auth.js";
+
 import "./db.js";
 
 const app = express();
 
+app.use("/api/auth", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res, next) => {
