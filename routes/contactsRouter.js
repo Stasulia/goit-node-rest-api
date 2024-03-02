@@ -14,9 +14,9 @@ const jsonParser = express.json();
 
 contactsRouter.get("/", auth, controllers.getAllContacts);
 
-contactsRouter.get("/:id", controllers.getOneContact);
+contactsRouter.get("/:id", auth, controllers.getOneContact);
 
-contactsRouter.delete("/:id", controllers.deleteContact);
+contactsRouter.delete("/:id", auth, controllers.deleteContact);
 
 contactsRouter.post(
   "/",
@@ -28,6 +28,7 @@ contactsRouter.post(
 
 contactsRouter.put(
   "/:id",
+  auth,
   jsonParser,
   validateBody(updateContactSchema),
   controllers.updateContact
@@ -35,6 +36,7 @@ contactsRouter.put(
 
 contactsRouter.patch(
   "/:id/favorite",
+  auth,
   jsonParser,
   validateBody(updateFavoriteSchema),
   controllers.updateFavorite

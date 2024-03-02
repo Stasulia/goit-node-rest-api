@@ -2,8 +2,12 @@ import Contact from "../models/contacts.js";
 import HttpError from "../helpers/HttpError.js";
 
 async function getAllContacts(req, res, next) {
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 10, favorite } = req.query;
+  const skip = (page - 1) * limit;
   try {
-    const result = await Contact.find();
+    const result = await Contact.find({ owner }, { skip, limit });
+    //const result = await Contact.find({ownerId: req.user.id});
     res.status(200).send(result);
   } catch (error) {
     next(error);

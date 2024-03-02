@@ -42,10 +42,32 @@ async function login(req, res) {
     id: user._id,
   };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(user._id, { token });
 
-  res.json({ token });
+  res.json({
+    token: token,
+    user: {
+      email: email,
+      name: user.name,
+    },
+  });
 }
 
+async function getCurrent(req, res) {
+  const { email, name } = req.user;
+  res.status(200).json({
+    email,
+    name,
+  });
+}
+
+async function logout(req, res) {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: "" });
+  res.json({
+    message: "Logout success",
+  });
+}
 // async function login(req, res, next) {
 //   const { email, password } = req.body;
 
@@ -76,5 +98,5 @@ async function login(req, res) {
 //   }
 // }
 
-export default { register: ctrlWrapper(register), login: ctrlWrapper(login) };
-//export default { register, login };
+//export default { register: ctrlWrapper(register), login: ctrlWrapper(login), getCurrent: ctrlWrapper(getCurrent) };
+export default { register, login, getCurrent, logout };
