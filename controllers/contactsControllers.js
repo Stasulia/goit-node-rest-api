@@ -36,8 +36,9 @@ async function deleteContact(req, res, next) {
 }
 
 async function createContact(req, res, next) {
+  const { _id: owner } = req.user;
   try {
-    const newContact = await Contact.create(req.body);
+    const newContact = await Contact.create(...req.body, owner);
     console.log(newContact);
     res.status(201).json(newContact);
   } catch (error) {

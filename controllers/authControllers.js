@@ -9,7 +9,9 @@ const { SECRET_KEY } = process.env;
 
 async function register(req, res) {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const normalizedEmail = email.toLowerCase();
+
+  const user = await User.findOne({ email: normalizedEmail });
 
   if (user) {
     throw HttpError(409, "Email is already in use");
@@ -24,10 +26,14 @@ async function register(req, res) {
 }
 async function login(req, res) {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
+  const normalizedEmail = email.toLowerCase();
+
+  const user = await User.findOne({ email: normalizedEmail });
   if (!user) {
     throw HttpError(401, "Email or password invalid");
   }
+  //медод compare порівнює паролі(пароль який прийщов з фроненду(який ввів користувач та захешований пароль, якиц зберігаеться в базі дани-))
+  //метод compare повертае тру або фолз
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
     throw HttpError(401, "Email or password invalid");
@@ -40,4 +46,35 @@ async function login(req, res) {
   res.json({ token });
 }
 
+// async function login(req, res, next) {
+//   const { email, password } = req.body;
+
+//   const normalizedEmail = email.toLowerCase();
+
+//   try {
+//     const user = await User.findOne({ email: normalizedEmail });
+
+//     if (user === null) {
+//       console.log("Email");
+//       return res
+//         .status(401)
+//         .send({ message: "Email or password is incorrect" });
+//     }
+
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if (isMatch === false) {
+//       console.log("Password");
+//       return res
+//         .status(401)
+//         .send({ message: "Email or password is incorrect" });
+//     }
+
+//     res.send({ token: "TOKEN" });
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
 export default { register: ctrlWrapper(register), login: ctrlWrapper(login) };
+//export default { register, login };

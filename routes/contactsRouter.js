@@ -6,12 +6,13 @@ import {
   updateContactSchema,
   updateFavoriteSchema,
 } from "../schemas/contactsSchemas.js";
+import auth from "../middleware/auth.js";
 
 const contactsRouter = express.Router();
 
 const jsonParser = express.json();
 
-contactsRouter.get("/", controllers.getAllContacts);
+contactsRouter.get("/", auth, controllers.getAllContacts);
 
 contactsRouter.get("/:id", controllers.getOneContact);
 
@@ -19,6 +20,7 @@ contactsRouter.delete("/:id", controllers.deleteContact);
 
 contactsRouter.post(
   "/",
+  auth,
   jsonParser,
   validateBody(createContactSchema),
   controllers.createContact
