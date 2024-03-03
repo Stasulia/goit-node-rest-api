@@ -14,12 +14,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       match: emailRegexp,
       unique: true,
-      required: true,
+      required: [true, "Email is required"],
     },
     password: {
       type: String,
       minlength: 6,
-      required: true,
+      required: [true, "Password is required"],
+    },
+    subscription: {
+      type: String,
+      enum: ["starter", "pro", "business"],
+      default: "starter",
     },
     token: {
       type: String,
@@ -42,10 +47,9 @@ const loginSchema = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
-// const schemas = {
-//   registerSchema,
-//   loginSchema,
-// };
+const subscriptionShema = Joi.object({
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
+});
 
 const User = mongoose.model("user", userSchema);
 //export default mongoose.model("User", userSchema);

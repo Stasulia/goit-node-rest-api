@@ -3,11 +3,12 @@ import HttpError from "../helpers/HttpError.js";
 
 async function getAllContacts(req, res, next) {
   const { _id: owner } = req.user;
-  const { page = 1, limit = 10, favorite } = req.query;
-  const skip = (page - 1) * limit;
+  //const { page = 1, limit = 10, favorite } = req.query;
+  //const skip = (page - 1) * limit;
   try {
-    const result = await Contact.find({ owner }, { skip, limit });
-    //const result = await Contact.find({ownerId: req.user.id});
+    //  const result = await Contact.find({ owner }, { skip, limit });
+    const result = await Contact.find({ owner });
+    // const result = await Contact.find({ ownerId: req.user.id });
     res.status(200).send(result);
   } catch (error) {
     next(error);
@@ -39,17 +40,26 @@ async function deleteContact(req, res, next) {
   }
 }
 
+// async function createContact(req, res, next) {
+//   const { _id: owner } = req.user;
+//   try {
+//     const newContact = await Contact.create(...req.body, owner);
+//     console.log(newContact);
+//     res.status(201).json(newContact);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 async function createContact(req, res, next) {
   const { _id: owner } = req.user;
   try {
-    const newContact = await Contact.create(...req.body, owner);
+    const newContact = await Contact.create({ ...req.body, owner });
     console.log(newContact);
     res.status(201).json(newContact);
   } catch (error) {
     next(error);
   }
 }
-
 async function updateContact(req, res, next) {
   const { id } = req.params;
   try {

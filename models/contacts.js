@@ -8,7 +8,7 @@ const contactSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+    // match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
   },
   phone: {
     type: String,
