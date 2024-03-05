@@ -3,13 +3,16 @@ import HttpError from "../helpers/HttpError.js";
 
 async function getAllContacts(req, res, next) {
   const { _id: owner } = req.user;
-  //const { page = 1, limit = 10} = req.query;
-  //const skip = (page - 1) * limit;
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
   try {
-    //const result = await Contact.find({ owner }, { skip, limit });
-    const result = await Contact.find({ owner });
+    const result = await Contact.find({ owner }, "-createdAt -updatedAt", {
+      skip,
+      limit,
+    });
     res.status(200).send(result);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 }
