@@ -2,7 +2,7 @@ import "dotenv/config.js";
 import express from "express";
 
 import contactsRouter from "./routes/contactsRouter.js";
-import authRouter from "./routes/auth.js";
+import authRouter from "./routes/userRouter.js";
 
 import "./db.js";
 
@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api/auth", authRouter);
+app.use("/api/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 
 app.use((req, res, next) => {
