@@ -74,7 +74,7 @@ async function updateContact(req, res, next) {
   const { _id: owner } = req.user;
   try {
     const contactToUpdate = await Contact.findOneAndUpdate(
-      { id, owner },
+      { _id: id, owner },
       // { ownerId: req.user.id },
       req.body,
       { new: true }
@@ -93,10 +93,11 @@ async function updateContact(req, res, next) {
 
 async function updateFavorite(req, res, next) {
   const { id } = req.params;
+  const { _id: owner } = req.user;
   const { favorite } = req.body;
   try {
-    const result = await Contact.findByIdAndUpdate(
-      id,
+    const result = await Contact.findOneAndUpdate(
+      { _id: id, owner },
       // { ownerId: req.user.id },
       { favorite },
       {
