@@ -20,7 +20,7 @@ async function getOneContact(req, res, next) {
   const { id } = req.params;
   const { _id: owner } = req.user;
   try {
-    const result = await Contact.findById(id);
+    const result = await Contact.findOne({ _id: id, owner });
     if (result === null) {
       throw HttpError(404, "Contact is not found");
     }
