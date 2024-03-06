@@ -32,12 +32,11 @@ async function getOneContact(req, res, next) {
     next(error);
   }
 }
-
 async function deleteContact(req, res, next) {
   const { id } = req.params;
   const { _id: owner } = req.user;
   try {
-    const deletedContact = await Contact.findByIdAndDelete(id, { owner });
+    const deletedContact = await Contact.findOneAndDelete({ id, owner });
     if (!deletedContact) {
       throw HttpError(404, "Contact is not found");
     }
@@ -46,6 +45,19 @@ async function deleteContact(req, res, next) {
     next(error);
   }
 }
+// async function deleteContact(req, res, next) {
+//   const { id } = req.params;
+//   const { _id: owner } = req.user;
+//   try {
+//     const deletedContact = await Contact.findByIdAndDelete(id, { owner });
+//     if (!deletedContact) {
+//       throw HttpError(404, "Contact is not found");
+//     }
+//     res.json({ message: `contact ${id} is deleted` });
+//   } catch (error) {
+//     next(error);
+//   }
+// }
 
 async function createContact(req, res, next) {
   const { _id: owner } = req.user;
