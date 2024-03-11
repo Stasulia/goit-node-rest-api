@@ -4,6 +4,10 @@ import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import gravatar from "gravatar";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import Jimp from "jimp";
 
 const { SECRET_KEY } = process.env;
 
@@ -17,8 +21,13 @@ async function register(req, res) {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+  const avatarURL = gravatar.url(email);
 
-  const newUser = await User.create({ ...req.body, password: hashPassword });
+  const newUser = await User.create({
+    ...req.body,
+    password: hashPassword,
+    avatarURL,
+  });
   res.status(201).json({
     email: newUser.email,
     subscription: newUser.subscription,
@@ -67,9 +76,34 @@ async function logout(req, res) {
   });
 }
 
+async function updateAvatar(req, res, next) {
+  const img = await Jimp.read(req.file.path);
+  await img.resize(250, 250).writeAsync(req.file.path);
+  try {
+    await fs.rename(
+      req.file.path,
+      path.join(process.cwd(), "public/avatars", req.file.filename)
+    );
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { avatarURL: `${/avatars/}${req.file.filename}` },
+      { new: true }
+    );
+    if (user === null) {
+      return res.status(404).send({ message: "User is not found" });
+    }
+
+    res.send({ avatarURL: user.avatarURL });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };

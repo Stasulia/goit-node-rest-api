@@ -9,7 +9,7 @@ import "./db.js";
 const app = express();
 
 app.use(express.json());
-
+app.use(express.static("public"));
 app.use("/api/users", authRouter);
 app.use("/api/contacts", contactsRouter);
 

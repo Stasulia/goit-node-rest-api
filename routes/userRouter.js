@@ -3,9 +3,10 @@ import validateBody from "../helpers/validateBody.js";
 import authController from "../controllers/authControllers.js";
 import { loginSchema, registerSchema } from "../models/user.js";
 import auth from "../middleware/auth.js";
+import upload from "../middleware/upload.js";
 
 const userRouter = express.Router();
-//const jsonParser = express.json();
+const jsonParser = express.json();
 
 userRouter.post(
   "/register",
@@ -23,5 +24,12 @@ userRouter.post(
 userRouter.get("/current", auth, authController.getCurrent);
 
 userRouter.post("/logout", auth, authController.logout);
+
+userRouter.patch(
+  "/avatars",
+  auth,
+  upload.single("avatars"),
+  authController.updateAvatar
+);
 
 export default userRouter;
