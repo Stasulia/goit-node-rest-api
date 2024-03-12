@@ -2,22 +2,13 @@ import multer from "multer";
 import * as path from "node:path";
 import * as crypto from "node:crypto";
 
-// const multerConfig = multer.diskStorage({
-//   destination(req, file, cb) {
-//     cb(null, path.join(process.cwd(), "tmp"));
-//   },
-//   filename: (req, file, cb) => {
-//     const prefix = crypto.randomUUID();
-//     cb(null, `${prefix}-${file.originalname}`);
-//   },
-// });
-
 const multerConfig = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, path.join(process.cwd(), "tmp"));
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    const prefix = crypto.randomUUID();
+    cb(null, `${prefix}-${file.originalname}`);
   },
 });
 

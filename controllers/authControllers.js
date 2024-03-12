@@ -77,9 +77,9 @@ async function logout(req, res) {
 }
 
 async function updateAvatar(req, res, next) {
-  const img = await Jimp.read(req.file.path);
-  await img.resize(250, 250).writeAsync(req.file.path);
   try {
+    const img = await Jimp.read(req.file.path);
+    await img.resize(250, 250).writeAsync(req.file.path);
     await fs.rename(
       req.file.path,
       path.join(process.cwd(), "public/avatars", req.file.filename)
@@ -90,9 +90,6 @@ async function updateAvatar(req, res, next) {
       { avatarURL: `${/avatars/}${req.file.filename}` },
       { new: true }
     );
-    if (user === null) {
-      return res.status(404).send({ message: "User is not found" });
-    }
 
     res.send({ avatarURL: user.avatarURL });
   } catch (error) {
