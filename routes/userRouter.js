@@ -1,7 +1,7 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import authController from "../controllers/authControllers.js";
-import { loginSchema, registerSchema } from "../models/user.js";
+import { emailSchema, loginSchema, registerSchema } from "../models/user.js";
 import auth from "../middleware/auth.js";
 import upload from "../middleware/upload.js";
 
@@ -13,6 +13,14 @@ userRouter.post(
   //jsonParser,
   validateBody(registerSchema),
   authController.register
+);
+
+userRouter.get("/verify/:verificationToken", authController.verifyEmail);
+
+userRouter.post(
+  "/verify",
+  validateBody(emailSchema),
+  authController.resendVerifyEmail
 );
 
 userRouter.post(

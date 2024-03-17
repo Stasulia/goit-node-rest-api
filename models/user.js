@@ -34,6 +34,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    verify: {
+      type: Boolean,
+      default: false, //якщо email Не підтверджен - false. коли підтвердить, треба змінити на true
+    },
+    verificationToken: {
+      type: String,
+      default: null,
+      // required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -44,6 +53,10 @@ const registerSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().pattern(emailRegexp).required(),
   password: Joi.string().min(6).required(),
+});
+
+const emailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
 });
 
 const loginSchema = Joi.object({
@@ -58,4 +71,4 @@ const subscriptionShema = Joi.object({
 const User = mongoose.model("user", userSchema);
 //export default mongoose.model("User", userSchema);
 
-export { User, registerSchema, loginSchema };
+export { User, registerSchema, loginSchema, subscriptionShema, emailSchema };
